@@ -4,6 +4,7 @@ __author__ = 'nathan'
 from dbsync.syncs.base import BaseSync
 
 class ThreadPoolSync(BaseSync):
+
     pass
 
 
