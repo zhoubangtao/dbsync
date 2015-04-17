@@ -26,7 +26,7 @@ class BaseSync():
     def sync(self, target):
         pass
 
-    def teardown(self):
+    def cleanup(self):
         pass
 
 class Dumper(threading.Thread):
