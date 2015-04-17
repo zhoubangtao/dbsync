@@ -12,7 +12,7 @@ try:
 except ImportError:  # pragma: nocover
     raise ImportError('SQLAlchemyJobStore requires SQLAlchemy installed')
 
-from dbsync.models.base import SyncBaseModel
+from dbsync.models import base
 
-class SQLAlchemyModel(SyncBaseModel, Table):
+class SQLAlchemyModel(base.BaseModel, Table):
     pass

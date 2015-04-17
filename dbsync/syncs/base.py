@@ -9,12 +9,25 @@ import codecs
 class BaseSync():
 
     def __init__(self):
-
         pass
 
-    def run(self):
+    def setup(self):
         pass
 
+    def partition(self):
+        pass
+
+    def merge(self):
+        pass
+
+    def target(self):
+        pass
+
+    def sync(self, target):
+        pass
+
+    def teardown(self):
+        pass
 
 class Dumper(threading.Thread):
     def __init__(self, dst_file, sq):

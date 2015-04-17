@@ -7,13 +7,13 @@ except ImportError:  # pragma: nocover
     import pickle
 
 try:
-    from peewee import *
+    import peewee
 except ImportError:  # pragma: nocover
     raise ImportError('PeeweeModel requires peewee installed')
 
-from dbsync.models.base import SyncBaseModel
+from dbsync.models import base
 
-class PeeweeModel(SyncBaseModel, Model):
+class PeeweeModel(base.BaseModel, peewee.Model):
 
     def __init__(self):
         pass
@@ -40,7 +40,7 @@ class PeeweeModel(SyncBaseModel, Model):
         query by count(*)
         :return:
         """
-        return cls.raw('select * from (?)', (cls._meta.db_table))
+        return cls.raw('select count(*) from (?)', (cls._meta.db_table))
 
     @classmethod
     def rows(cls):

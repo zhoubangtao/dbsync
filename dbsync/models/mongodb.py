@@ -19,9 +19,9 @@ try:
 except ImportError:  # pragma: nocover
     raise ImportError('MongoDBModel requires mongoengine installed')
 
-from dbsync.models.base import SyncBaseModel
+from dbsync.models import base
 
-class MongoDBModel(SyncBaseModel, Document):
+class MongoDBModel(base.BaseModel, Document):
 
     def __init__(self):
         pass

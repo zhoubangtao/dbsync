@@ -55,3 +55,16 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# elipse
+.settings.xml
+
+# IDEA
+*.iml
+.idea/
+
+# Mac OS
+.DS_Store
+
+# Fabric
+fabfile.py

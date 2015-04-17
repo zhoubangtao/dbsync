@@ -3,11 +3,13 @@ __author__ = 'nathan'
 
 import six
 
-class SyncBaseModel():
+class BaseModel():
 
     def __init__(self, *args, **kwargs):
         pass
 
+    def partition(self):
+        pass
 
     def data_size(self):
         pass

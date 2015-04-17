@@ -23,6 +23,14 @@ executors = {
     'default': ThreadPoolExecutor(20),
     'processpool': ProcessPoolExecutor(5)
 }
+
+
+    # def jobconfs(self):
+    #     jcs = super(, self).jobconfs()
+    #     jcs.append('mapreduce.map.memory.mb=%s' % 4096)
+    #     jcs.append('mapreduce.reduce.memory.mb=%s' % 4096)
+    #     return jcs
+
 job_defaults = {
     'coalesce': False,
     'max_instances': 3

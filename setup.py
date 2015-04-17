@@ -24,7 +24,7 @@ if sys.version_info < (3, 2):
     extra_requirements.append('futures')
 
 here = os.path.dirname(__file__)
-readme_path = os.path.join(here, 'README.md')
+readme_path = os.path.join(here, 'README.rst')
 readme = open(readme_path).read()
 
 setup(
@@ -34,7 +34,7 @@ setup(
     long_description=readme,
     author='Bangtao Zhou',
     author_email='zhoubangtao@163.com',
-    url='http://pypi.python.org/pypi/DBSync/',
+    url='http://github.com/zhoubangtao/dbsync',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
