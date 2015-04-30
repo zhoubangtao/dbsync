@@ -5,16 +5,23 @@ import threading
 import logging
 import time
 import codecs
+import six
 
-class BaseSyncer():
+from abc import ABCMeta, abstractmethod
 
-    def __init__(self):
-        pass
+class BaseSyncer(six.with_metaclass(ABCMeta, object)):
+    """Abstract base class that defines the interface that every syncer must implement."""
+
+    _logger = logging.getLogger("dbsync.syncers")
+
+    @abstractmethod
+    def __init__(self, serializer, model, notifier):
+        super(BaseSyncer, self).__init__()
+        self.serializer = serializer
+        self.model = model
+        self.notifier = notifier
 
     def setup(self):
-        pass
-
-    def partition(self, col, num_partitions, lower_bound, upper_bound):
         pass
 
     def merge(self):
@@ -23,32 +30,19 @@ class BaseSyncer():
     def target(self):
         pass
 
-    def sync(self, target):
+    @abstractmethod
+    def sync(self):
+        pass
+
+    @abstractmethod
+    def incr_sync(self, fields):
+        """
+
+        :param fields:
+        :return:
+        """
         pass
 
     def cleanup(self):
         pass
 
-class Dumper(threading.Thread):
-    def __init__(self, dst_file, sq):
-        threading.Thread.__init__(self)
-        self._logger = logging.getLogger("dbsync.syncs")
-        self.dst_file = dst_file
-        self.sq = sq
-
-    def run(self):
-        start = time.clock()
-        count = 0
-        self._logger.info("run start")
-        with codecs.open(self.dst_file, 'w', 'utf-8') as w :
-            for item in self.sq.naive().iterator():
-                w.write(item.unicode_dumps() + "\n")
-                count += 1
-
-        self._logger.info("write count : %d" % count)
-
-        end = time.clock()
-        self._logger.info("%s file count %d, run time : %.03f seconds" % (self.dst_file, count, end - start))
-
-    def stop(self):
-            self.thread_stop = True
