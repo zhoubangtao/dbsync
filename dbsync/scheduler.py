@@ -5,9 +5,6 @@ __author__ = 'nathan'
 from pytz import utc
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.schedulers.blocking import BlockingScheduler
-# from apscheduler.jobstores.mongodb import MongoDBJobStore
-# from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 import time
@@ -16,20 +13,13 @@ import time
 jobstores = {
     # 'mongo': MongoDBJobStore(),
     # 'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
-    'default' : MemoryJobStore()
+    'default': MemoryJobStore()
 }
 
 executors = {
     'default': ThreadPoolExecutor(20),
     'processpool': ProcessPoolExecutor(5)
 }
-
-
-    # def jobconfs(self):
-    #     jcs = super(, self).jobconfs()
-    #     jcs.append('mapreduce.map.memory.mb=%s' % 4096)
-    #     jcs.append('mapreduce.reduce.memory.mb=%s' % 4096)
-    #     return jcs
 
 job_defaults = {
     'coalesce': False,
