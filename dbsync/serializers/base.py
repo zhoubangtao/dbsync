@@ -4,6 +4,7 @@ import six
 
 from abc import ABCMeta, abstractmethod
 
+
 class BaseSerializer(six.with_metaclass(ABCMeta, object)):
     """Abstract base class that defines the interface that every serializer must implement."""
 

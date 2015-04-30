@@ -2,7 +2,8 @@
 __author__ = 'nathan'
 
 import csv
-from dbsync.serializers.base import BaseSerializer
+from base import BaseSerializer
+
 
 class CSVSerializer(BaseSerializer):
 

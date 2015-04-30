@@ -6,6 +6,7 @@ from datetime import date, datetime
 
 from dbsync.serializers.base import BaseSerializer
 
+
 class JSONSerializer(BaseSerializer):
     """ serialize model to json """
 
@@ -17,7 +18,7 @@ class JSONSerializer(BaseSerializer):
         :param cls:
         :return:
         """
-        return json.dumps(model, ensure_ascii, cls)
+        return json.dumps(model.data(), ensure_ascii, cls)
 
 
 class DatetimeJSONEncoder(json.JSONEncoder):
