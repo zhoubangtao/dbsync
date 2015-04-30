@@ -6,7 +6,7 @@ import logging
 import time
 import codecs
 
-class BaseSync():
+class BaseSyncer():
 
     def __init__(self):
         pass
@@ -14,7 +14,7 @@ class BaseSync():
     def setup(self):
         pass
 
-    def partition(self):
+    def partition(self, col, num_partitions, lower_bound, upper_bound):
         pass
 
     def merge(self):
