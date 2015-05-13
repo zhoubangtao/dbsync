@@ -3,5 +3,6 @@ __author__ = 'nathan'
 
 from base import BaseSyncer
 
+
 class SparkSyncer(BaseSyncer):
     pass
