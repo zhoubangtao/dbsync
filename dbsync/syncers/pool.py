@@ -1,23 +1,29 @@
 # -*- coding:utf-8 -*-
-__author__ = 'nathan'
 
-import threading
-import logging
-import time
-import codecs
 import concurrent.futures
 
-from base import BaseSyncer
+from base import BaseSyncer, sync_data
 
 
 class BasePoolSyncer(BaseSyncer):
-    def __init__(self, serializer, model, notifier, pool):
-        super(BasePoolSyncer, self).__init__(serializer, model, notifier)
+    def __init__(self, from_, to_, pool, serializer=None, notifier=None):
+        super(BasePoolSyncer, self).__init__(from_, to_, serializer, notifier)
         self._pool = pool
 
+    def merge(self):
+        pass
+
+    def sync(self):
+        self._pool.submit(sync_data, self._from, self._to, self._serializer)
+
+    def incr_sync(self, fields):
+        self._pool.submit(sync_data)
+
+    def stop(self):
+        self._pool.shutdown()
 
 
-class ThreadPoolSyncer(BaseSyncer):
+class ThreadPoolSyncer(BasePoolSyncer):
     """
     An executor that runs jobs in a concurrent.futures thread pool.
 
@@ -26,34 +32,12 @@ class ThreadPoolSyncer(BaseSyncer):
     :param max_workers: the maximum number of spawned threads.
     """
 
-    def __init__(self, serializer, model, notifier, max_workers=10):
+    def __init__(self, from_, to_, serializer=None, notifier=None, max_workers=10):
         pool = concurrent.futures.ThreadPoolExecutor(int(max_workers))
-        super(ThreadPoolSyncer, self).__init__(serializer, model, notifier, pool)
+        super(ThreadPoolSyncer, self).__init__(from_, to_, pool, serializer, notifier)
 
-    def setup(self):
-        pass
 
-    def merge(self):
-        pass
-
-    def target(self):
-        pass
-
-    def sync(self):
-        pass
-
-    def incr_sync(self, fields):
-        """
-
-        :param fields:
-        :return:
-        """
-        pass
-
-    def cleanup(self):
-        pass
-
-class ProcessPoolSyncer(BaseSyncer):
+class ProcessPoolSyncer(BasePoolSyncer):
     """
     An executor that runs jobs in a concurrent.futures process pool.
 
@@ -62,31 +46,7 @@ class ProcessPoolSyncer(BaseSyncer):
     :param max_workers: the maximum number of spawned processes.
     """
 
-    def __init__(self, serializer, model, notifier, max_workers=10):
+    def __init__(self, from_, to_, serializer=None, notifier=None, max_workers=10):
         pool = concurrent.futures.ProcessPoolExecutor(int(max_workers))
-        super(ProcessPoolSyncer, self).__init__(serializer, model, notifier, pool)
+        super(ProcessPoolSyncer, self).__init__(from_, to_, pool, serializer, notifier)
 
-
-class Dumper(threading.Thread):
-    def __init__(self, dst_file, sq):
-        threading.Thread.__init__(self)
-        self._logger = logging.getLogger("dbsync.syncers")
-        self.dst_file = dst_file
-        self.sq = sq
-
-    def run(self):
-        start = time.clock()
-        count = 0
-        self._logger.info("run start")
-        with codecs.open(self.dst_file, 'w', 'utf-8') as w :
-            for item in self.sq.naive().iterator():
-                w.write(item.unicode_dumps() + "\n")
-                count += 1
-
-        self._logger.info("write count : %d" % count)
-
-        end = time.clock()
-        self._logger.info("%s file count %d, run time : %.03f seconds" % (self.dst_file, count, end - start))
-
-    def stop(self):
-            self.thread_stop = True
