@@ -12,12 +12,9 @@ class BaseSerializer(six.with_metaclass(ABCMeta, object)):
         pass
 
     @abstractmethod
-    def serialize(self, model, *args, **kwargs):
+    def serialize(self, datum, *args, **kwargs):
         """
-
-        :param model:
-        :param args:
-        :param kwargs:
-        :return:
+        Args:
+            datum(map): one record or line data
         """
         pass
