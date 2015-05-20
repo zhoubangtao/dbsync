@@ -1,2 +1,11 @@
 # -*- coding:utf-8 -*-
-__author__ = 'nathan'
+
+from .base import BaseStore
+
+
+class KafkaStore(BaseStore):
+    """
+        It stands for Kafka topic
+    """
+    def __init__(self):
+        pass
