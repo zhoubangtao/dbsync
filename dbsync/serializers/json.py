@@ -5,6 +5,7 @@ import json
 
 from datetime import date, datetime
 from decimal import Decimal
+from bson.objectid import ObjectId
 from dbsync.serializers.base import BaseSerializer
 
 
@@ -30,5 +31,7 @@ class DatetimeJSONEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d')
         elif isinstance(obj, Decimal):
             return float(obj)
+        elif isinstance(obj, ObjectId):
+            return str(obj)
         else:
             return json.JSONEncoder.default(self, obj)

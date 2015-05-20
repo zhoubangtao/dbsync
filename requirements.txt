@@ -2,4 +2,7 @@ pymysql 0.6.6
 
 peewee 2.5.0
 
-pydoop
+six
+
+
+bson
