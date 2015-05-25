@@ -1,23 +1,22 @@
 # -*- coding:utf-8 -*-
-__author__ = 'nathan'
 
 import abc
 import six
 
 
 class BaseStore(six.with_metaclass(abc.ABCMeta, object)):
+    """Abstract base class that defines the interface that every store must implement."""
 
     def __init__(self):
         super(BaseStore, self).__init__()
 
+    def __iter__(self):
+        return self
+
     @abc.abstractmethod
-    def get(self):
+    def all(self):
         pass
 
     @abc.abstractmethod
-    def put(self):
-        pass
-
-    @abc.abstractmethod
-    def exit(self):
+    def incr_by_day(self):
         pass

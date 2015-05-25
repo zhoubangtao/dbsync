@@ -1,59 +1,40 @@
-__author__ = 'nathan'
 
 import unittest
-import sys
-import os
+import json
 
-import logging
-import logging.config
-from datetime import datetime
-import codecs
-import threading
+from sqlalchemy import Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine
+# from dbsync import DBSync
+from dbsync.stores.rdbms import DatabaseStore
+from dbsync.stores.local import LocalStore
+from dbsync.syncers.pool import ThreadPoolSyncer
+from datetime import date, datetime
 
-logging.config.fileConfig("../conf/logger.conf")
-logger = logging.getLogger('dbsync')
+class DBSyncTestCase(unittest.TestCase):
 
-dbsync_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-logger.debug(dbsync_root)
-sys.path.insert(0, dbsync_root)
-
-from dbsync.mysql.homework_sitter.uct_user import *
-from dbsync.mysql.homework_sitter.comm_region import *
-from dbsync.mysql.homework_sitter.vox_class import *
-from dbsync.mysql.homework_sitter.vox_class_student_ref import *
-from dbsync.mysql.homework_sitter.vox_school import *
-from dbsync.mysql.database import *
-
-DATA_DIR = "/data/dbsync/data/"
-
-class MyTestCase(unittest.TestCase):
     def test_dbsync(self):
+        #DBSync().serializer().syncer().validator().start()
+        engine = create_engine('oracle://vbaread:vbaread@10.1.253.15:1521/orcl', echo=True)
+        rdbms = DatabaseStore(engine)
+        local_file = LocalStore('data')
+        ThreadPoolSyncer(rdbms, local_file).sync()
 
-        uct_user_dumper = Dumper(''.join([DATA_DIR, "uct_user.json.", datetime.now().date().isoformat()]), UctUser.select().limit(4))
-        common_region_dumper = Dumper(''.join([DATA_DIR, "comm_region.json.", datetime.now().date().isoformat()]), CommRegion.select().limit(4))
-        vox_class_dumper = Dumper(''.join([DATA_DIR, "vox_class.json.", datetime.now().date().isoformat()]), VoxClass.select().limit(4))
-        vox_class_student_ref_dumper = Dumper(''.join([DATA_DIR, "vox_class_student_ref.json.", datetime.now().date().isoformat()]), VoxClassStudentRef.select().limit(4))
-        vox_school_dumper = Dumper(''.join([DATA_DIR, "vox_school.json.", datetime.now().date().isoformat()]), vox_school.VoxSchool.select().limit(4))
+    def test_dump(self):
+        engine = create_engine('oracle://vbaread:vbaread@10.1.253.15:1521/orcl', echo=True)
+        res = engine.connect().execute("select * from vba.student_homework_month")
+        for row in res:
+            yield row
 
-        uct_user_dumper.start()
-        common_region_dumper.start()
-        vox_class_dumper.start()
-        vox_class_student_ref_dumper.start()
-        vox_school_dumper.start()
+        # print json.dumps(collections.OrderedDict((key.lower(), row[key]) for key in row.keys()), cls=DatetimeJSONEncoder)
 
-class Dumper(threading.Thread):
-    def __init__(self, dst_file, sq):
-        threading.Thread.__init__(self)
-        self.dst_file = dst_file
-        self.sq = sq
-
-    def run(self):
-        with codecs.open(self.dst_file, 'w', 'utf-8') as w :
-            for item in self.sq:
-                w.write(item)
-
-    def stop(self):
-            self.thread_stop = True
+class DatetimeJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 if __name__ == '__main__':
     unittest.main()

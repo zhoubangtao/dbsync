@@ -2,22 +2,20 @@
 
 import concurrent.futures
 
-from base import BaseSyncer, sync_data
+from base import BaseSyncer, sync_data, incr_sync_by_day
 
 
 class BasePoolSyncer(BaseSyncer):
-    def __init__(self, from_, to_, pool, serializer=None, notifier=None):
-        super(BasePoolSyncer, self).__init__(from_, to_, serializer, notifier)
+    def __init__(self, store, pool, serializer=None, notifier=None):
+        super(BasePoolSyncer, self).__init__(store, serializer, notifier)
         self._pool = pool
 
-    def merge(self):
-        pass
-
     def sync(self):
-        self._pool.submit(sync_data, self._from, self._to, self._serializer)
+        self._pool.submit(sync_data, self._store, self._serializer, 'data.txt')
+        # sync_data(self._store, self._serializer, 'data.txt')
 
-    def incr_sync(self, fields):
-        self._pool.submit(sync_data)
+    def incr_sync_by_day(self):
+        self._pool.submit(incr_sync_by_day, self._store, self, self._serializer)
 
     def stop(self):
         self._pool.shutdown()
@@ -32,9 +30,9 @@ class ThreadPoolSyncer(BasePoolSyncer):
     :param max_workers: the maximum number of spawned threads.
     """
 
-    def __init__(self, from_, to_, serializer=None, notifier=None, max_workers=10):
+    def __init__(self, store, serializer=None, notifier=None, max_workers=10):
         pool = concurrent.futures.ThreadPoolExecutor(int(max_workers))
-        super(ThreadPoolSyncer, self).__init__(from_, to_, pool, serializer, notifier)
+        super(ThreadPoolSyncer, self).__init__(store, pool, serializer, notifier)
 
 
 class ProcessPoolSyncer(BasePoolSyncer):
@@ -46,7 +44,7 @@ class ProcessPoolSyncer(BasePoolSyncer):
     :param max_workers: the maximum number of spawned processes.
     """
 
-    def __init__(self, from_, to_, serializer=None, notifier=None, max_workers=10):
+    def __init__(self, store, serializer=None, notifier=None, max_workers=10):
         pool = concurrent.futures.ProcessPoolExecutor(int(max_workers))
-        super(ProcessPoolSyncer, self).__init__(from_, to_, pool, serializer, notifier)
+        super(ProcessPoolSyncer, self).__init__(store, pool, serializer, notifier)
 

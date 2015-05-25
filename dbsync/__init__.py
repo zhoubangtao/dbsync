@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-__author__ = 'nathan'
 import logging
+import stores
 
 release = "0.1.1"
 
