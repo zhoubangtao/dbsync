@@ -211,7 +211,6 @@ class DatabaseStore(BaseStore):
         connection = self.__engine.connect()
         result = connection.execute(self._select_all())
         for row in result:
-            print row
             yield collections.OrderedDict((key.lower(), row[key]) for key in row.keys())
 
     def incr_by_day(self):
