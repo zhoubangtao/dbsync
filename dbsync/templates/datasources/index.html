@@ -1,0 +1,65 @@
+{% extends "../layout.html" %}
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/datasources">DataSource</a></li>
+        <li class="active">Index</li>
+    </ol>
+    <a class="btn btn-primary btn-sm pull-right" href="/datasources/new">Add DataSource</a>
+    <table class="table">
+        <thead>
+            <tr class="">
+            <th>Id</th>
+            <th>Type</th>
+            <th>Instance Name</th>
+            <th>Host</th>
+            <th>Port</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Query</th>
+            <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for datasource in datasources %}
+            <tr>
+                <td>{{datasource.id}}</td>
+                <td>{{datasource.type}}</td>
+                <td>{{datasource.instance}}</td>
+                <td>{{datasource.host}}</td>
+                <td>{{datasource.port}}</td>
+                <td>{{datasource.username}}</td>
+                <td>{{datasource.passwd}}</td>
+                <td>{{datasource.query}}</td>
+                <td>
+                    <a href="/datasources/{{datasource.id}}/edit" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="/datasources/{{datasource.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="/datasources/{{datasource.id}}/delete" class="btn btn-info btn-sm">Create Job</a>
+                </td>
+
+            </tr>
+            {% end %}
+        </tbody>
+    </table>
+    <nav>
+  <ul class="pagination pull-right">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
+{% end %}
+

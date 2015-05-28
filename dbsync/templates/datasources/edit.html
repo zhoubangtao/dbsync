@@ -1,0 +1,92 @@
+{% extends "../layout.html" %}
+{% block content %}
+<ol class="breadcrumb">
+    <li><a href="/datasources">DataSource</a></li>
+    <li class="active">Edit</li>
+</ol>
+<form class="form-horizontal" action="/datasources/{{datasource.id}}/edit"
+      method="post">
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Id</label>
+
+        <div class="col-sm-10">
+            <p class="form-control-static">{{datasource.id}}</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Type</label>
+
+        <div class="col-sm-10">
+            <select class="form-control" name="type">
+                <option {% if datasource.type=="MySQL" %} selected {% end %}>MySQL</option>
+                <option {% if datasource.type=="Mongo" %} selected {% end %}>Mongo</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Instance</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="instance"
+                   placeholder="Instance" value="{{datasource.instance}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Host</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="host"
+                   placeholder="10.0.0.1" value="{{datasource.host}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Port</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control"
+                   placeholder="3306" value="{{datasource.port}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Username</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" , name="username"
+                   placeholder="nathan" value="{{datasource.username}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPassword"
+               class="col-sm-2 control-label">Password</label>
+
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword" ,
+                   name="passwd"
+                   placeholder="Password" value="{{datasource.passwd}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Query</label>
+
+        <div class="col-sm-10">
+            <input type="text" class="form-control" , name="query"
+                   placeholder="Query" value="{{datasource.query}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Email</label>
+
+        <div class="col-sm-10">
+            <p class="form-control-static">email@example.com</p>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary pull-right">Submit</button>
+</form>
+{% end %}
