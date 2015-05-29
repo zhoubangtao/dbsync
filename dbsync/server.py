@@ -22,13 +22,8 @@ class MainHandler(tornado.web.RequestHandler):
 
 class JobIndexHandler(tornado.web.RequestHandler):
     def get(self):
-        # jobs = self.application.db.query(Job)
-        source = DataSource(id=1, type='MySQL', instance='main', host='localhost', port=3306, username='root', passwd='root')
-        job1 = Job(id=1, database='test', database_eval=False, table='test', table_eval=False, sync_type='overwrite', datasource=source)
-        job1.status = 'Run'
-        job2 = Job(id=2, database='test', database_eval=False, table='("user"+str(x) if x>0 else "user" for x in range(0,2))', table_name='user', table_eval=True, sync_type='overwrite', datasource=source)
-        job2.status = 't'
-        jobs = (job1, job2)
+        jobs = self.application.db.query(Job)
+        # jobs = (job1, job2)
         self.render('jobs/index.html', jobs=jobs, active="jobs")
 
 class JobShowHandler(tornado.web.RequestHandler):
@@ -42,9 +37,30 @@ class JobNewHandler(tornado.web.RequestHandler):
         self.render('jobs/new.html', datasources=datasources, active="jobs")
 
     def post(self):
-        pass
+        datasource_id = self.get_argument('datasource_id')
+        database = self.get_argument('database')
+        database_eval = self.get_argument('database_eval', False)
+        database_name = self.get_argument('database_name', None) if database_eval else database
+        table = self.get_argument('table')
+        table_eval = self.get_argument('table_eval', False)
+        table_name = self.get_argument('table_name', None) if table_eval else table
 
-        self.redirect('jobs')
+        create_column = self.get_argument('create_column', None)
+        update_column = self.get_argument('update_column', None)
+
+        json_schema = self.get_argument('json_schema', '{}')
+        sync_type = self.get_argument('sync_type', 'inc_by_datetime')
+
+        db = self.application.db
+        job = Job(datasource_id=datasource_id, database=database,
+                  database_eval=database_eval, database_name=database_name,
+                  table=table, table_eval=table_eval, table_name=table_name,
+                  create_column=create_column, update_column=update_column,
+                  json_schema=json_schema, sync_type=sync_type)
+        db.add(job)
+        db.commit()
+
+        self.redirect('/jobs')
 
 
 class DataSourceIndexHandler(tornado.web.RequestHandler):
